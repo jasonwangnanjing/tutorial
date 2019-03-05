@@ -87,3 +87,18 @@ COMMIT;
     manner inconsistent with all possible serial (one at a time) executions of those transactions. 
 
 只有两个都是SERIABLIZABLE隔离级别的事务才会互相影响。
+
+-------------------
+-------------------
+readonly是表明当前是个readOnly的transaction还是write的 read/write的
+
+@Transactional默认会处理好，begin transaction, do transaction, rollback at excpetion, commit等
+Propagation.MANDATORY必须在一个已有的事务中执行,否则抛出异常
+Propagation.REQUIRED果有事务, 那么加入事务, 没有的话新建一个(默认)
+Propagation.NOT_SUPPORTED 容器不为这个方法开启事务
+Propagation.REQUIRE_NEW必须为当前方法开启个新的事务，否则异常
+PROPAGATION_NESTED 如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED类似的操作。
+Propagation.NEVER 必须在一个没有的事务中执行,否则抛出异常(与Propagation.MANDATORY相反)
+Propagation.SUPPORTS 如果其他bean调用这个方法,在其他bean中声明事务,那就用事务.如果其他bean没有声明事务那就不用事务
+
+
