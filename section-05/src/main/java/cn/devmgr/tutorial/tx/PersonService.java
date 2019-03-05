@@ -14,7 +14,7 @@ public class PersonService {
     private final Log log = LogFactory.getLog(PersonService.class);
     
     @Autowired private PersonDao personDao;
-
+   //readOnly means it is an read only transaction.
     @Transactional(readOnly=true)
     public List<PersonDto> getAll(){
         try {
@@ -29,7 +29,7 @@ public class PersonService {
 
         return list;
     }
-    
+    //insert person without transactional annotation. then throw exception will not rollback
     public void insertNoAnnotation(PersonDto person, boolean throwException) {
         personDao.insert(person);
         if(throwException) {
@@ -78,7 +78,7 @@ public class PersonService {
     public void insertMandatory(PersonDto person, boolean throwException) {
         personDao.insert(person);
         if(throwException) {
-            throw new RuntimeException("ERROR");
+            throw new RuntimeException("ERROR raised from calling parameter");
         }
     }
     
@@ -89,7 +89,7 @@ public class PersonService {
     public void insertNever(PersonDto person, boolean throwException) {
         personDao.insert(person);
         if(throwException) {
-            throw new RuntimeException("ERROR");
+            throw new RuntimeException("ERROR raised from calling parameter");
         }
     }
     
@@ -100,7 +100,7 @@ public class PersonService {
     public void insertSupports(PersonDto person, boolean throwException) {
         personDao.insert(person);
         if(throwException) {
-            throw new RuntimeException("ERROR");
+            throw new RuntimeException("ERROR raised from calling parameter");
         }
     }
     
@@ -121,7 +121,7 @@ public class PersonService {
         }
     }
     
-    
+    //update without transactional declaration 
     public void update(PersonDto person, boolean throwException) {
         personDao.update(person);
         if(throwException) {
