@@ -56,8 +56,8 @@ public class AppTests {
 //		testMandatory3();
 //		testMandatory4();
 //		 testThrowException();
-		 testThrowExceptionAndCommit();
-		// testTranscationalTimeoutParamter();
+//		 testThrowExceptionAndCommit();
+		 testTranscationalTimeoutParamter();
 	}
 
 	/**

@@ -93,7 +93,7 @@ COMMIT;
 readonly是表明当前是个readOnly的transaction还是write的 read/write的
 
 @Transactional默认会处理好，begin transaction, do transaction, rollback at excpetion, commit等
-Propagation.MANDATORY必须在一个已有的事务中执行,否则抛出异常
+Propagation.MANDATORY必须在一个已有的事务中执行,否则抛出异常  Mandatory自身不产生transaction
 Propagation.REQUIRED果有事务, 那么加入事务, 没有的话新建一个(默认)
 Propagation.NOT_SUPPORTED 容器不为这个方法开启事务
 Propagation.REQUIRE_NEW必须为当前方法开启个新的事务，否则异常
@@ -101,4 +101,11 @@ PROPAGATION_NESTED 如果当前存在事务，则在嵌套事务内执行。如�
 Propagation.NEVER 必须在一个没有的事务中执行,否则抛出异常(与Propagation.MANDATORY相反)
 Propagation.SUPPORTS 如果其他bean调用这个方法,在其他bean中声明事务,那就用事务.如果其他bean没有声明事务那就不用事务
 
+throws 中涵盖的exception及其子类，都不会导致rollback，所以再@transactional对应的throws定义时需要特别注意
+norollbackfor exception指定不为十么exception rollback
+rollbackfor exception指的是为特定class rollback.
+
+
+@Select("lock table person in  ACCESS EXCLUSIVE mode")可以锁定表
+Timeout从方法开始到方法中最后一个sql语句结束  
 
