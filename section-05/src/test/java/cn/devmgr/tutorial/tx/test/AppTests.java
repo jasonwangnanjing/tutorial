@@ -54,9 +54,9 @@ public class AppTests {
 //		 testMandatory();
 //		testMandatory2();
 //		testMandatory3();
-		testMandatory4();
+//		testMandatory4();
 //		 testThrowException();
-		// testThrowExceptionAndCommit();
+		 testThrowExceptionAndCommit();
 		// testTranscationalTimeoutParamter();
 	}
 
@@ -212,7 +212,7 @@ public class AppTests {
 	public void testThrowException() {
 		dao.deleteAll();
 
-		// 遇到被声明throws的异常，事务是会被提交的；如果声明了throws Exception，那就几乎所有情况都被提交事务了
+		// exceptions raised during method execution belongs to exceptions defined by throws，事务是还是会被提交的；如果声明了throws Exception，那就几乎所有情况都被提交事务了
 		PersonDto p = new PersonDto(1, "甲");
 		try {
 			anotherService.insertAndThrowException(p, new Exception("ERROR"));
@@ -225,12 +225,13 @@ public class AppTests {
 		}
 		Assert.assertTrue(list.size() == 1);
 
-		dao.deleteAll();
+//		dao.deleteAll();
 	}
 
 	public void testThrowExceptionAndCommit() {
 		dao.deleteAll();
 		PersonDto p = new PersonDto(1, "甲");
+		PersonDto yi = new PersonDto(2,"yi");
 		try {
 			anotherService.insertRollbackForSQLException(p, new SQLException("sql exception"));
 		} catch (Exception e) {
@@ -240,6 +241,7 @@ public class AppTests {
 		if (log.isTraceEnabled()) {
 			log.trace("query all list.size()=" + list.size());
 		}
+		//due to exception SQLExcetpion is defined for rollbackfor,hence there should be record saved.
 		Assert.assertTrue(list.size() == 0);
 
 		// 设置了rollbackFor之后，仅仅rollbackFor的会回滚，不是rollbackFor或其子类的就不回滚了
@@ -250,22 +252,24 @@ public class AppTests {
 		}
 		List<PersonDto> list2 = serv.getAll();
 		if (log.isTraceEnabled()) {
-			log.trace("query all list2.size()=" + list2.size());
+			log.trace("rollbackfor sqlExcpetion but current exception is Exception hence tx should be comminited,query all list2.size()=" + list2.size());
 		}
+		//due to Exception is not SQLException or SQLExceptions's subClass, therefore record will be commited.
 		Assert.assertTrue(list2.size() == 1);
 
 		// 设置了noRollbackFor NullPointerException，rollBackFor
 		// RuntimeException，NullPointerException是RuntimeException的子类
 		try {
-			anotherService.insertNoRollbackForSQLException(p, new NullPointerException("null"));
+			anotherService.insertNoRollbackForSQLException(yi, new NullPointerException("null"));
 		} catch (Exception e) {
 
 		}
 		List<PersonDto> list3 = serv.getAll();
 		if (log.isTraceEnabled()) {
-			log.trace("query all list2.size()=" + list3.size());
+			log.trace("norollback for NullPointerException hence commit should happened.rollback for query all list2.size()=" + list3.size());
 		}
-		Assert.assertTrue(list3.size() == 1);
+		//noRollback for NullPointerException defined for transaction,therefore record is updated
+		Assert.assertTrue(list3.size() == 2);
 	}
 
 	/**

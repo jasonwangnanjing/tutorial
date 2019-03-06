@@ -104,6 +104,7 @@ public class AnotherService {
 
 	/**
 	 * 方法定义抛出异常，但是只有SQLException被回滚，其他异常不回滚
+	 * rollback for specified exception
 	 */
 	@Transactional(rollbackFor = SQLException.class)
 	public void insertRollbackForSQLException(PersonDto p1, Exception e) throws Exception {
