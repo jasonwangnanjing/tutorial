@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.TransactionUsageException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.devmgr.tutorial.tx.AnotherService;
 import cn.devmgr.tutorial.tx.PersonDao;
@@ -48,9 +50,12 @@ public class AppTests {
 //		 testInsertNoTransInsideTrans();
 //		 testInsertNoAnnotationInsideTrans();
 //		 testNested();
-		 testNested2();
-		// testMandatory();
-		// testThrowException();
+//		 testNested2();
+//		 testMandatory();
+//		testMandatory2();
+//		testMandatory3();
+		testMandatory4();
+//		 testThrowException();
 		// testThrowExceptionAndCommit();
 		// testTranscationalTimeoutParamter();
 	}
@@ -69,6 +74,7 @@ public class AppTests {
 	 * MANDATORY要求必须在一个已有的事务中执行,否则抛出异常；
 	 * 此测试中，调用insertMandatory方法（方法声明Propagation.MANDATORY)之前没有开启事务 所以必定会抛出异常
 	 */
+	
 	public void testMandatory() {
 		boolean b = false;
 		try {
@@ -77,7 +83,51 @@ public class AppTests {
 			log.trace(e.getClass().getName());
 			b = true;
 		}
-		Assert.assertTrue(b);
+		Assert.assertFalse(b);
+	}
+	
+	/**
+	 * mandatory combined with exist tx, then will be commited together with exist tx
+	 */
+	public void testMandatory2() {
+		boolean b = false;
+		try {
+			serv.insertMandatory2(new PersonDto(20002, "乙"), false,false);
+		} catch (TransactionUsageException e) {
+			log.trace(e.getClass().getName());
+			b = true;
+		}
+		Assert.assertFalse(b);
+	}
+	
+	/*
+	 * mandatory do not have own transaction, therefore its own exception will not rollback its own 
+	 * if its exception raise not catched it will cause its out ex rollback
+	 */
+	public void testMandatory3() {
+		boolean b = false;
+		try {
+			serv.insertMandatory2(new PersonDto(20002, "乙"), true,false);
+		} catch (TransactionUsageException e) {
+			log.trace(e.getClass().getName());
+			b = true;
+		}
+		Assert.assertFalse(b);
+	}
+	
+	/*
+	 * mandatory do not have own transaction, therefore its own exception will not rollback its own 
+	 * if its exception raise and caught, it will be committed together with its outside tx
+	 */
+	public void testMandatory4() {
+		boolean b = false;
+		try {
+			serv.insertMandatory3(new PersonDto(20002, "乙"), false,true);
+		} catch (TransactionUsageException e) {
+			log.trace(e.getClass().getName());
+			b = true;
+		}
+		Assert.assertFalse(b);
 	}
 
 	/**

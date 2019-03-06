@@ -82,6 +82,43 @@ public class PersonService {
         }
     }
     
+  /**
+   * Mandatory transaction must combined with exist transaction
+   *     behavior: commit and rollback together with exist tx
+   *     could rollback own but could not rollback outside tx?
+   */ 
+    @Transactional(propagation=Propagation.REQUIRED)
+    public void insertMandatory2(PersonDto person, boolean throwException, boolean manthrowException) {
+        personDao.insert(new PersonDto(2003,"xiaofei"));
+
+        this.insertMandatory(person, manthrowException);
+
+        if(throwException) {
+            throw new RuntimeException("ERROR");
+        }
+    }
+    
+    
+    /**
+     * Mandatory transaction must combined with exist transaction
+     *     behavior: commit and rollback together with exist tx
+     *     could rollback own but could not rollback outside tx?
+     */ 
+      @Transactional(propagation=Propagation.REQUIRED)
+      public void insertMandatory3(PersonDto person, boolean throwException, boolean manthrowException) {
+          personDao.insert(new PersonDto(2003,"xiaofei"));
+          
+          try {
+          this.insertMandatory(person, manthrowException);}
+          catch(RuntimeException e) {
+        	  System.out.println("mandatory tx raised exception,so its person should not be saved");
+          }
+
+          if(throwException) {
+              throw new RuntimeException("ERROR");
+          }
+      }
+    
     /**
      * Propagation.NEVER 必须在一个没有的事务中执行,否则抛出异常(与Propagation.MANDATORY相反)
      */
