@@ -33,7 +33,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
         String authToken = null;
         
-        // 下面的代码从Http Header的Authorization中获取token，也可以从其他header,cookie等中获取，看客户端怎么传递token
+        // Http Header的Authorization中获取token，也可以从其他header,cookie等中获取，看客户端怎么传递token
         String requestHeader = request.getHeader("Authorization");
         if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
             authToken = requestHeader.substring(7);
@@ -44,7 +44,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         
         if (authToken != null) {
             UserDetails user = null;
-            //查询token对应的用户
+            //token对应的用户
             user = tokenService.getUserFromToken(authToken);
             if(user != null) {
                 // 把user设置到SecurityContextHolder内，以spring使用
