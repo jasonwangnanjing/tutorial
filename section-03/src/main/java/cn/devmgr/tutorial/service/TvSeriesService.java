@@ -52,10 +52,11 @@ public class TvSeriesService {
             log.trace("updateTvSeries started for " + tvSeriesDto);
         }
         TvSeries tvSeries = BeanConverter.toTvSeries(tvSeriesDto);
+  
         seriesDao.save(tvSeries);
         return BeanConverter.toTvSeriesDto(tvSeries);
     }
-    
+    //to update two object, here another dao is called.
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public TvSeriesDto addTvSeries(TvSeriesDto tvSeriesDto) {
         if(log.isTraceEnabled()) {

@@ -144,6 +144,12 @@ public class TvSeriesController {
         FileOutputStream fos = new FileOutputStream("target/" + imgFile.getOriginalFilename());
         IOUtils.copy(imgFile.getInputStream(), fos);
         fos.close();
+        
+        TvSeriesDto ts = tvSeriesService.getTvSeriesById(id);
+        
+        ts.getTvCharacters().forEach( character -> character.setPhoto(fos.toString()));
+        
+        tvSeriesService.updateTvCharacter(ts.getTvCharacters().get(0));
     }
     
     /**
