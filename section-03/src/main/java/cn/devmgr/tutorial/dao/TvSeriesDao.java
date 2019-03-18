@@ -11,7 +11,7 @@ import cn.devmgr.tutorial.po.TvSeries;
 public interface TvSeriesDao extends JpaRepository<TvSeries,Integer>{
     
     @Modifying
-    @Query(value="update tv_series set status=-1, reason=?2 where id=?1", nativeQuery = true)
+    @Query(value="update tv_series set status=-1, delete_reason=?2 where id=?1", nativeQuery = true)
     public int logicDelete(int id, String reason);
     
 }

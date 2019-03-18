@@ -85,6 +85,7 @@ public class TvSeriesService {
         return BeanConverter.toTvCharacterDto(result);
     }
 
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public boolean deleteTvSeries(int id, String reason) {
         int rows = seriesDao.logicDelete(id, reason);
         return (rows == 1);

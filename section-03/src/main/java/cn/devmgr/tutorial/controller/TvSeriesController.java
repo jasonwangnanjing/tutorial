@@ -119,7 +119,7 @@ public class TvSeriesController {
         }
         Map<String, String> result = new HashMap<>();
         TvSeriesDto ts = tvSeriesService.getTvSeriesById(id);
-        if(ts != null) {
+        if(ts == null) {
             throw new ResourceNotFoundException();
         }else {
             tvSeriesService.deleteTvSeries(id, deleteReason);

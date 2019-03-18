@@ -5,10 +5,10 @@ spring:
   application:
     name: spring-boot-tutorial
   datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://127.0.0.1:5432/tvseries?stringtype=unspecified
-    username: pgdbo
-    password: sql
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tvseries?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC
+    username: root
+    password: root
   jackson:
     serialization:
       write-dates-as-timestamps: true  #使用数值timestamp表示日期
